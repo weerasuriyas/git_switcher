@@ -66,6 +66,13 @@ final class ProfileStore: ObservableObject {
         if let id = _activeProfileId, !profiles.contains(where: { $0.id == id }) {
             _activeProfileId = nil
         }
+        // Detect active profile by matching current ~/.gitconfig email
+        if let (_, currentEmail) = try? GitConfigManager().readCurrentNameEmail(),
+           let match = profiles.first(where: { $0.gitEmail == currentEmail }),
+           match.id != _activeProfileId {
+            _activeProfileId = match.id
+            saveActiveId()
+        }
     }
 
     private func save() {
