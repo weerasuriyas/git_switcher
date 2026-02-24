@@ -14,19 +14,26 @@ final class GitProfileTests: XCTestCase {
         )
         let data = try JSONEncoder().encode(profile)
         let decoded = try JSONDecoder().decode(GitProfile.self, from: data)
-        XCTAssertEqual(decoded.id, profile.id)
-        XCTAssertEqual(decoded.name, profile.name)
-        XCTAssertEqual(decoded.gitName, profile.gitName)
-        XCTAssertEqual(decoded.gitEmail, profile.gitEmail)
-        XCTAssertEqual(decoded.sshKeyPath, profile.sshKeyPath)
-        XCTAssertNil(decoded.signingKey)
+        XCTAssertEqual(decoded, profile)
     }
 
     func test_default_values() {
         let profile = GitProfile(name: "Personal", gitName: "Jane", gitEmail: "jane@home.com")
-        XCTAssertNotNil(profile.id)
+        let profile2 = GitProfile(name: "Personal", gitName: "Jane", gitEmail: "jane@home.com")
+        XCTAssertNotEqual(profile.id, profile2.id)
         XCTAssertNil(profile.sshKeyPath)
         XCTAssertNil(profile.signingKey)
         XCTAssertNil(profile.signingFormat)
+    }
+
+    func test_decode_json_with_missing_optional_keys() throws {
+        let json = """
+        {"id":"00000000-0000-0000-0000-000000000002","name":"Work","gitName":"Bob","gitEmail":"bob@work.com"}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(GitProfile.self, from: json)
+        XCTAssertEqual(decoded.name, "Work")
+        XCTAssertNil(decoded.sshKeyPath)
+        XCTAssertNil(decoded.signingKey)
+        XCTAssertNil(decoded.signingFormat)
     }
 }

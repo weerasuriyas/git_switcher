@@ -1,7 +1,7 @@
 import Foundation
 
 struct GitProfile: Codable, Identifiable, Equatable {
-    var id: UUID
+    let id: UUID
     var name: String
     var gitName: String
     var gitEmail: String
