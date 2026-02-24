@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		23D836E34439CC0B0E10C4F5 /* GitSwitcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D943941CAE0C4033497CFF3 /* GitSwitcherApp.swift */; };
+		50D720F24DFB3DCFB3271C55 /* GitProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEBA408D230EF549E6E25EA /* GitProfileTests.swift */; };
+		DFF069F14B3B79A17A0A623A /* GitProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D142E192AB5D05658EB09CC9 /* GitProfile.swift */; };
 		FD9EED614EBB3812EE2E7EAB /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +28,9 @@
 		6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		6D943941CAE0C4033497CFF3 /* GitSwitcherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitSwitcherApp.swift; sourceTree = "<group>"; };
 		BD58ACA93514808B46466FAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BEEBA408D230EF549E6E25EA /* GitProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitProfileTests.swift; sourceTree = "<group>"; };
 		CC89059A4AF194ADA4F73DC1 /* GitSwitcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GitSwitcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D142E192AB5D05658EB09CC9 /* GitProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitProfile.swift; sourceTree = "<group>"; };
 		F8F7D81F9F0284CDDC6307C2 /* GitSwitcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitSwitcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -35,6 +39,7 @@
 			isa = PBXGroup;
 			children = (
 				9B988D8D47A77012ED6AC27E /* App */,
+				69C3A406115C906630D10BAA /* Models */,
 			);
 			path = GitSwitcher;
 			sourceTree = "<group>";
@@ -48,9 +53,18 @@
 			);
 			sourceTree = "<group>";
 		};
+		69C3A406115C906630D10BAA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D142E192AB5D05658EB09CC9 /* GitProfile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		83C78ED591B56540703C2DD4 /* GitSwitcherTests */ = {
 			isa = PBXGroup;
 			children = (
+				BEEBA408D230EF549E6E25EA /* GitProfileTests.swift */,
 				6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */,
 			);
 			path = GitSwitcherTests;
@@ -147,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50D720F24DFB3DCFB3271C55 /* GitProfileTests.swift in Sources */,
 				FD9EED614EBB3812EE2E7EAB /* Placeholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,6 +170,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFF069F14B3B79A17A0A623A /* GitProfile.swift in Sources */,
 				23D836E34439CC0B0E10C4F5 /* GitSwitcherApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,7 +208,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -345,7 +364,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
