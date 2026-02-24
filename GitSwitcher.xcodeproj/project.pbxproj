@@ -7,9 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11647E594E6E6801BE6C6D28 /* ProfileSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C131446E7E63C28C973AAD6 /* ProfileSettingsView.swift */; };
 		23D836E34439CC0B0E10C4F5 /* GitSwitcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D943941CAE0C4033497CFF3 /* GitSwitcherApp.swift */; };
 		50D720F24DFB3DCFB3271C55 /* GitProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEBA408D230EF549E6E25EA /* GitProfileTests.swift */; };
+		5CE3EB27C0741A8FF9E2E7A3 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A273AA0F3FF7F2756CC0C5 /* ProfileStore.swift */; };
+		5E476E353B404886EA404055 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D299EC39AD9003973DF9EFAB /* ContentView.swift */; };
+		713C703F6395CD39C380BA5D /* GitConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F9434D90CC617D92B589FD /* GitConfigManager.swift */; };
+		8496B7616F849454FA008922 /* GitConfigManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02BF8DA5621FCB9D91BAEC7 /* GitConfigManagerTests.swift */; };
+		D21202C2E1DDAC48802885D6 /* ProfileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C91E877A92ACEA8E9BF6FA4 /* ProfileStoreTests.swift */; };
 		DFF069F14B3B79A17A0A623A /* GitProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D142E192AB5D05658EB09CC9 /* GitProfile.swift */; };
+		E9F7CC269143A5582AFB75CB /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE91A95DB20273166AEACD3 /* LaunchAtLoginManager.swift */; };
 		FD9EED614EBB3812EE2E7EAB /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,12 +32,19 @@
 
 /* Begin PBXFileReference section */
 		2C5AEA8859DFF794081A372A /* GitSwitcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GitSwitcher.entitlements; sourceTree = "<group>"; };
+		3CE91A95DB20273166AEACD3 /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
+		4C91E877A92ACEA8E9BF6FA4 /* ProfileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStoreTests.swift; sourceTree = "<group>"; };
+		69A273AA0F3FF7F2756CC0C5 /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		6D943941CAE0C4033497CFF3 /* GitSwitcherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitSwitcherApp.swift; sourceTree = "<group>"; };
+		8C131446E7E63C28C973AAD6 /* ProfileSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsView.swift; sourceTree = "<group>"; };
+		B1F9434D90CC617D92B589FD /* GitConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitConfigManager.swift; sourceTree = "<group>"; };
 		BD58ACA93514808B46466FAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BEEBA408D230EF549E6E25EA /* GitProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitProfileTests.swift; sourceTree = "<group>"; };
 		CC89059A4AF194ADA4F73DC1 /* GitSwitcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GitSwitcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D142E192AB5D05658EB09CC9 /* GitProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitProfile.swift; sourceTree = "<group>"; };
+		D299EC39AD9003973DF9EFAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F02BF8DA5621FCB9D91BAEC7 /* GitConfigManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitConfigManagerTests.swift; sourceTree = "<group>"; };
 		F8F7D81F9F0284CDDC6307C2 /* GitSwitcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitSwitcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -40,8 +54,19 @@
 			children = (
 				9B988D8D47A77012ED6AC27E /* App */,
 				69C3A406115C906630D10BAA /* Models */,
+				EAB7D11C5CE3B5F652D6BC00 /* Services */,
+				585F4621159D70AD08AF219B /* Views */,
 			);
 			path = GitSwitcher;
+			sourceTree = "<group>";
+		};
+		585F4621159D70AD08AF219B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D299EC39AD9003973DF9EFAB /* ContentView.swift */,
+				8C131446E7E63C28C973AAD6 /* ProfileSettingsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		658D0227A525667641111ED0 = {
@@ -64,8 +89,10 @@
 		83C78ED591B56540703C2DD4 /* GitSwitcherTests */ = {
 			isa = PBXGroup;
 			children = (
+				F02BF8DA5621FCB9D91BAEC7 /* GitConfigManagerTests.swift */,
 				BEEBA408D230EF549E6E25EA /* GitProfileTests.swift */,
 				6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */,
+				4C91E877A92ACEA8E9BF6FA4 /* ProfileStoreTests.swift */,
 			);
 			path = GitSwitcherTests;
 			sourceTree = "<group>";
@@ -78,6 +105,16 @@
 				BD58ACA93514808B46466FAD /* Info.plist */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		EAB7D11C5CE3B5F652D6BC00 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B1F9434D90CC617D92B589FD /* GitConfigManager.swift */,
+				3CE91A95DB20273166AEACD3 /* LaunchAtLoginManager.swift */,
+				69A273AA0F3FF7F2756CC0C5 /* ProfileStore.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		EDA94DBCC53D5C23DE06BA51 /* Products */ = {
@@ -161,8 +198,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8496B7616F849454FA008922 /* GitConfigManagerTests.swift in Sources */,
 				50D720F24DFB3DCFB3271C55 /* GitProfileTests.swift in Sources */,
 				FD9EED614EBB3812EE2E7EAB /* Placeholder.swift in Sources */,
+				D21202C2E1DDAC48802885D6 /* ProfileStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,8 +209,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E476E353B404886EA404055 /* ContentView.swift in Sources */,
+				713C703F6395CD39C380BA5D /* GitConfigManager.swift in Sources */,
 				DFF069F14B3B79A17A0A623A /* GitProfile.swift in Sources */,
 				23D836E34439CC0B0E10C4F5 /* GitSwitcherApp.swift in Sources */,
+				E9F7CC269143A5582AFB75CB /* LaunchAtLoginManager.swift in Sources */,
+				11647E594E6E6801BE6C6D28 /* ProfileSettingsView.swift in Sources */,
+				5CE3EB27C0741A8FF9E2E7A3 /* ProfileStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
