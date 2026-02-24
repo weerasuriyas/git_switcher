@@ -23,4 +23,8 @@ final class LaunchAtLoginManager: ObservableObject {
             os_log(.error, "LaunchAtLoginManager: toggle failed: %{public}@", error.localizedDescription)
         }
     }
+
+    func refresh() {
+        isEnabled = SMAppService.mainApp.status == .enabled
+    }
 }

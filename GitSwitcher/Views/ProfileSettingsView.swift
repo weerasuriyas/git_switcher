@@ -50,9 +50,14 @@ struct ProfileSettingsView: View {
 
             Toggle("Launch at login", isOn: Binding(
                 get: { launchManager.isEnabled },
-                set: { _ in launchManager.toggle() }
+                set: { newValue in
+                    if newValue != launchManager.isEnabled {
+                        launchManager.toggle()
+                    }
+                }
             ))
             .padding([.horizontal, .bottom])
+            .onAppear { launchManager.refresh() }
         }
         .frame(width: 480, height: 380)
         .sheet(isPresented: $showingAddSheet) {
