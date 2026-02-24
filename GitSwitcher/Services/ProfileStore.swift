@@ -21,6 +21,7 @@ final class ProfileStore: ObservableObject {
 
     private let profilesURL: URL
     private let activeIdURL: URL
+    private let rulesManager = GitConfigRulesManager()
 
     init(storageDirectory: String = "\(NSHomeDirectory())/.config/git-profile-switcher") {
         let dir = URL(fileURLWithPath: storageDirectory)
@@ -37,21 +38,25 @@ final class ProfileStore: ObservableObject {
     func add(_ profile: GitProfile) {
         profiles.append(profile)
         save()
+        applyRules()
     }
 
     func update(_ profile: GitProfile) {
         guard let idx = profiles.firstIndex(where: { $0.id == profile.id }) else { return }
         profiles[idx] = profile
         save()
+        applyRules()
     }
 
     func delete(_ profile: GitProfile) {
+        try? rulesManager.removeCompanionConfig(for: profile)
         profiles.removeAll { $0.id == profile.id }
         if _activeProfileId == profile.id {
             _activeProfileId = nil
             saveActiveId()
         }
         save()
+        applyRules()
     }
 
     private func load() {
@@ -72,6 +77,14 @@ final class ProfileStore: ObservableObject {
            match.id != _activeProfileId {
             _activeProfileId = match.id
             saveActiveId()
+        }
+    }
+
+    private func applyRules() {
+        do {
+            try rulesManager.apply(profiles: profiles)
+        } catch {
+            os_log(.error, "ProfileStore: failed to apply git config rules: %{public}@", error.localizedDescription)
         }
     }
 
