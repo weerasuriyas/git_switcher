@@ -1,6 +1,7 @@
 import XCTest
 @testable import GitSwitcher
 
+@MainActor
 final class ProfileStoreTests: XCTestCase {
     var tempDir: URL!
 
@@ -59,5 +60,18 @@ final class ProfileStoreTests: XCTestCase {
 
         let store2 = ProfileStore(storageDirectory: tempDir.path)
         XCTAssertEqual(store2.profiles[0].gitEmail, "bob@newwork.com")
+    }
+
+    func test_delete_active_profile_clears_activeProfileId() throws {
+        let store = ProfileStore(storageDirectory: tempDir.path)
+        let profile = GitProfile(name: "Work", gitName: "Bob", gitEmail: "bob@work.com")
+        store.add(profile)
+        store.activeProfileId = profile.id
+
+        store.delete(profile)
+
+        XCTAssertNil(store.activeProfileId)
+        let store2 = ProfileStore(storageDirectory: tempDir.path)
+        XCTAssertNil(store2.activeProfileId)
     }
 }
