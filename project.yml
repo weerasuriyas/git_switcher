@@ -1,0 +1,34 @@
+name: GitSwitcher
+options:
+  bundleIdPrefix: com.gitswitch
+  deploymentTarget:
+    macOS: "13.0"
+  xcodeVersion: "15"
+settings:
+  SWIFT_VERSION: "5.9"
+
+targets:
+  GitSwitcher:
+    type: application
+    platform: macOS
+    sources:
+      - GitSwitcher
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.gitswitch.GitSwitcher
+      INFOPLIST_FILE: GitSwitcher/App/Info.plist
+      CODE_SIGN_IDENTITY: ""
+      CODE_SIGNING_REQUIRED: "NO"
+    entitlements:
+      path: GitSwitcher/App/GitSwitcher.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+
+  GitSwitcherTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - GitSwitcherTests
+    dependencies:
+      - target: GitSwitcher
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.gitswitch.GitSwitcherTests
