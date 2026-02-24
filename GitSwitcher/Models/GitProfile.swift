@@ -36,6 +36,12 @@ struct GitProfile: Codable, Identifiable, Equatable {
         self.repoOverrides = repoOverrides
     }
 
+    private enum CodingKeys: String, CodingKey {
+        case id, name, gitName, gitEmail
+        case sshKeyPath, signingKey, signingFormat
+        case githubLogin, directoryRules, repoOverrides
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
