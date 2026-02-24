@@ -50,12 +50,9 @@ struct ContentView: View {
         }
 
         Button("Manage Profiles…") {
+            NSApp.setActivationPolicy(.regular)
             openWindow(id: "profiles")
-            if #available(macOS 14.0, *) {
-                NSApplication.shared.activate()
-            } else {
-                NSApplication.shared.activate(ignoringOtherApps: true)
-            }
+            NSApp.activate(ignoringOtherApps: true)
         }
 
         Divider()

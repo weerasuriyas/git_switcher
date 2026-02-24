@@ -60,6 +60,9 @@ struct ProfileSettingsView: View {
             .onAppear { launchManager.refresh() }
         }
         .frame(width: 480, height: 380)
+        .onDisappear {
+            NSApp.setActivationPolicy(.accessory)
+        }
         .sheet(isPresented: $showingAddSheet) {
             ProfileFormView(profile: nil)
                 .environmentObject(store)
