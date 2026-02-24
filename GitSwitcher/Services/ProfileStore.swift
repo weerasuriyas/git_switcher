@@ -49,7 +49,11 @@ final class ProfileStore: ObservableObject {
     }
 
     func delete(_ profile: GitProfile) {
-        try? rulesManager.removeCompanionConfig(for: profile)
+        do {
+            try rulesManager.removeCompanionConfig(for: profile)
+        } catch {
+            os_log(.error, "ProfileStore: failed to remove companion config: %{public}@", error.localizedDescription)
+        }
         profiles.removeAll { $0.id == profile.id }
         if _activeProfileId == profile.id {
             _activeProfileId = nil
