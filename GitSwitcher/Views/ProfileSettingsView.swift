@@ -255,7 +255,6 @@ struct ProfileFormView: View {
                     Spacer()
                     Button("Remove") {
                         repoOverrides.removeAll { $0 == path }
-                        try? GitConfigRulesManager().removeRepoOverride(repoPath: path)
                     }
                     .foregroundStyle(.red)
                     .buttonStyle(.borderless)
@@ -283,6 +282,7 @@ struct ProfileFormView: View {
 
         if importer.isGHAvailable() {
             Task {
+                defer { isImporting = false }
                 do {
                     let info = try await importer.importViaGHCLI()
                     applyImport(info)
@@ -290,7 +290,6 @@ struct ProfileFormView: View {
                     showUsernameField = true
                     importStatus = .error("gh CLI failed. Enter your GitHub username below.")
                 }
-                isImporting = false
             }
         } else {
             showUsernameField = true
@@ -300,6 +299,7 @@ struct ProfileFormView: View {
     }
 
     private func fetchByUsername() async {
+        defer { isImporting = false }
         isImporting = true
         importStatus = .idle
         let importer = GitHubImporter()
@@ -310,7 +310,6 @@ struct ProfileFormView: View {
         } catch {
             importStatus = .error(error.localizedDescription)
         }
-        isImporting = false
     }
 
     private func applyImport(_ info: GitHubUserInfo) {
@@ -342,6 +341,12 @@ struct ProfileFormView: View {
             existing.githubLogin = githubLogin.isEmpty ? nil : githubLogin
             existing.directoryRules = directoryRules
             existing.repoOverrides = repoOverrides
+            // Remove overrides that were deleted
+            let removedRepos = (existingProfile?.repoOverrides ?? []).filter { !repoOverrides.contains($0) }
+            for path in removedRepos {
+                try? rulesManager.removeRepoOverride(repoPath: path)
+            }
+            // Write new/updated repo overrides
             for path in repoOverrides {
                 try? rulesManager.writeRepoOverride(repoPath: path, profile: existing)
             }
