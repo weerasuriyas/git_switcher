@@ -5,6 +5,7 @@ struct ProfileSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @State private var editingProfile: GitProfile?
     @State private var showingAddSheet = false
+    @StateObject private var launchManager = LaunchAtLoginManager()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -44,8 +45,16 @@ struct ProfileSettingsView: View {
                     .padding()
                 Spacer()
             }
+
+            Divider()
+
+            Toggle("Launch at login", isOn: Binding(
+                get: { launchManager.isEnabled },
+                set: { _ in launchManager.toggle() }
+            ))
+            .padding([.horizontal, .bottom])
         }
-        .frame(width: 480, height: 360)
+        .frame(width: 480, height: 380)
         .sheet(isPresented: $showingAddSheet) {
             ProfileFormView(profile: nil)
                 .environmentObject(store)
