@@ -1,6 +1,7 @@
 import XCTest
 @testable import GitSwitcher
 
+@MainActor
 final class GitConfigRulesManagerTests: XCTestCase {
     var tempDir: URL!
     var globalConfigURL: URL!

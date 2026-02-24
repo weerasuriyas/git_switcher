@@ -13,6 +13,7 @@ enum GitConfigRulesError: LocalizedError {
     }
 }
 
+@MainActor
 struct GitConfigRulesManager {
     private let globalConfigPath: String
     private let storageDirectory: String
@@ -62,7 +63,7 @@ struct GitConfigRulesManager {
             }
         }
 
-        // Write/remove companion configs
+        // Write/remove companion configs (before modifying global config)
         for profile in profiles {
             if profile.directoryRules.isEmpty {
                 try? removeCompanionConfig(for: profile)
@@ -76,36 +77,31 @@ struct GitConfigRulesManager {
         let existing = (try? String(contentsOf: configURL)) ?? ""
 
         let newContent: String
+        let managedSection = lines.isEmpty ? "" : buildManagedSection(lines: lines)
+
         if existing.contains(markerBegin) {
-            // Replace between markers using NSRegularExpression
-            let escapedBegin = NSRegularExpression.escapedPattern(for: markerBegin)
-            let escapedEnd = NSRegularExpression.escapedPattern(for: markerEnd)
-            let pattern = escapedBegin + "[\\s\\S]*?" + escapedEnd + "\\n?"
-            let regex = try! NSRegularExpression(pattern: pattern)
-            let range = NSRange(existing.startIndex..., in: existing)
-            if lines.isEmpty {
-                newContent = regex.stringByReplacingMatches(in: existing, range: range, withTemplate: "")
-            } else {
-                let replacement = buildManagedSection(lines: lines)
-                newContent = regex.stringByReplacingMatches(
-                    in: existing, range: range,
-                    withTemplate: NSRegularExpression.escapedTemplate(for: replacement)
-                )
+            // Replace managed section between markers using safe string range replacement
+            guard let startRange = existing.range(of: markerBegin),
+                  let endRange = existing.range(of: markerEnd) else {
+                // Markers corrupted — append fresh or clear
+                newContent = existing + managedSection
+                // Fall through to write
+                try write(newContent, to: configURL)
+                return
             }
-        } else if lines.isEmpty {
+            var sectionEnd = endRange.upperBound
+            if sectionEnd < existing.endIndex && existing[sectionEnd] == "\n" {
+                sectionEnd = existing.index(after: sectionEnd)
+            }
+            newContent = existing.replacingCharacters(in: startRange.lowerBound..<sectionEnd, with: managedSection)
+        } else if managedSection.isEmpty {
             newContent = existing
         } else {
-            let section = buildManagedSection(lines: lines)
-            newContent = existing.hasSuffix("\n") || existing.isEmpty
-                ? existing + section
-                : existing + "\n" + section
+            let separator = (existing.isEmpty || existing.hasSuffix("\n")) ? "" : "\n"
+            newContent = existing + separator + managedSection
         }
 
-        do {
-            try newContent.write(to: configURL, atomically: true, encoding: .utf8)
-        } catch {
-            throw GitConfigRulesError.writeFailed(error.localizedDescription)
-        }
+        try write(newContent, to: configURL)
     }
 
     // MARK: - Repo overrides
@@ -137,6 +133,14 @@ struct GitConfigRulesManager {
 
     private func buildManagedSection(lines: [String]) -> String {
         ([markerBegin] + lines + [markerEnd]).joined(separator: "\n") + "\n"
+    }
+
+    private func write(_ content: String, to url: URL) throws {
+        do {
+            try content.write(to: url, atomically: true, encoding: .utf8)
+        } catch {
+            throw GitConfigRulesError.writeFailed(error.localizedDescription)
+        }
     }
 
     private func runGit(_ args: String...) throws {
