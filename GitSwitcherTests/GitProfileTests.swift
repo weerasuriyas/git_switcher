@@ -36,4 +36,33 @@ final class GitProfileTests: XCTestCase {
         XCTAssertNil(decoded.signingKey)
         XCTAssertNil(decoded.signingFormat)
     }
+
+    func test_new_fields_default_to_empty() {
+        let profile = GitProfile(name: "Work", gitName: "Bob", gitEmail: "bob@work.com")
+        XCTAssertNil(profile.githubLogin)
+        XCTAssertTrue(profile.directoryRules.isEmpty)
+        XCTAssertTrue(profile.repoOverrides.isEmpty)
+    }
+
+    func test_new_fields_roundtrip() throws {
+        var profile = GitProfile(name: "Work", gitName: "Bob", gitEmail: "bob@work.com")
+        profile.githubLogin = "bobwork"
+        profile.directoryRules = ["/Users/bob/work"]
+        profile.repoOverrides = ["/Users/bob/personal/dotfiles"]
+        let data = try JSONEncoder().encode(profile)
+        let decoded = try JSONDecoder().decode(GitProfile.self, from: data)
+        XCTAssertEqual(decoded, profile)
+        XCTAssertEqual(decoded.directoryRules, ["/Users/bob/work"])
+        XCTAssertEqual(decoded.repoOverrides, ["/Users/bob/personal/dotfiles"])
+    }
+
+    func test_old_json_without_new_fields_still_decodes() throws {
+        let json = """
+        {"id":"00000000-0000-0000-0000-000000000003","name":"Work","gitName":"Bob","gitEmail":"bob@work.com"}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(GitProfile.self, from: json)
+        XCTAssertTrue(decoded.directoryRules.isEmpty)
+        XCTAssertTrue(decoded.repoOverrides.isEmpty)
+        XCTAssertNil(decoded.githubLogin)
+    }
 }
