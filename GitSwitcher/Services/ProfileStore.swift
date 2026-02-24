@@ -9,6 +9,7 @@ final class ProfileStore: ObservableObject {
     var activeProfileId: UUID? {
         get { _activeProfileId }
         set {
+            objectWillChange.send()  // notify SwiftUI to redraw
             _activeProfileId = newValue
             saveActiveId()
         }

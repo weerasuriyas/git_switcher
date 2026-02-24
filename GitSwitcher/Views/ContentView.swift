@@ -2,8 +2,9 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: ProfileStore
-    @State private var showingSettings = false
+    @Environment(\.openWindow) private var openWindow
     @State private var errorMessage: String?
+    @State private var isSwitching = false
 
     var body: some View {
         // Active profile header
@@ -24,11 +25,14 @@ struct ContentView: View {
                 HStack {
                     Text(profile.name)
                     Spacer()
-                    if profile.id == store.activeProfileId {
+                    if isSwitching {
+                        ProgressView().scaleEffect(0.5)
+                    } else if profile.id == store.activeProfileId {
                         Image(systemName: "checkmark")
                     }
                 }
             }
+            .disabled(isSwitching)
         }
 
         if store.profiles.isEmpty {
@@ -46,12 +50,12 @@ struct ContentView: View {
         }
 
         Button("Manage Profiles…") {
-            showingSettings = true
-            NSApplication.shared.activate(ignoringOtherApps: true)
-        }
-        .sheet(isPresented: $showingSettings) {
-            ProfileSettingsView()
-                .environmentObject(store)
+            openWindow(id: "profiles")
+            if #available(macOS 14.0, *) {
+                NSApplication.shared.activate()
+            } else {
+                NSApplication.shared.activate(ignoringOtherApps: true)
+            }
         }
 
         Divider()
@@ -62,14 +66,30 @@ struct ContentView: View {
         .keyboardShortcut("q")
     }
 
+    @MainActor
     private func switchTo(_ profile: GitProfile) {
+        guard !isSwitching else { return }
+        isSwitching = true
+        errorMessage = nil
         let manager = GitConfigManager()
-        do {
-            try manager.apply(profile)
-            store.activeProfileId = profile.id
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
+        Task {
+            do {
+                try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        do {
+                            try manager.apply(profile)
+                            cont.resume()
+                        } catch {
+                            cont.resume(throwing: error)
+                        }
+                    }
+                }
+                store.activeProfileId = profile.id
+                errorMessage = nil
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            isSwitching = false
         }
     }
 }
