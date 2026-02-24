@@ -66,26 +66,40 @@ struct GitHubImporter {
         FileManager.default.isExecutableFile(atPath: ghPath)
     }
 
-    func importViaGHCLI() throws -> GitHubUserInfo {
+    func importViaGHCLI() async throws -> GitHubUserInfo {
         guard isGHAvailable() else { throw GitHubImportError.ghNotAvailable }
 
-        let process = Process()
-        let pipe = Pipe()
-        let errPipe = Pipe()
-        process.executableURL = URL(fileURLWithPath: ghPath)
-        process.arguments = ["api", "user"]
-        process.standardOutput = pipe
-        process.standardError = errPipe
-        try process.run()
-        process.waitUntilExit()
+        return try await withCheckedThrowingContinuation { cont in
+            DispatchQueue.global(qos: .userInitiated).async {
+                do {
+                    let process = Process()
+                    let pipe = Pipe()
+                    let errPipe = Pipe()
+                    process.executableURL = URL(fileURLWithPath: self.ghPath)
+                    process.arguments = ["api", "user"]
+                    process.standardOutput = pipe
+                    process.standardError = errPipe
+                    try process.run()
+                    process.waitUntilExit()
 
-        guard process.terminationStatus == 0 else {
-            let errMsg = String(data: errPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-            throw GitHubImportError.commandFailed(errMsg.trimmingCharacters(in: .whitespacesAndNewlines))
+                    guard process.terminationStatus == 0 else {
+                        let errMsg = String(data: errPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+                        cont.resume(throwing: GitHubImportError.commandFailed(errMsg.trimmingCharacters(in: .whitespacesAndNewlines)))
+                        return
+                    }
+
+                    let output = String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+                    do {
+                        let info = try Self.parseUserJSON(output)
+                        cont.resume(returning: info)
+                    } catch {
+                        cont.resume(throwing: error)
+                    }
+                } catch {
+                    cont.resume(throwing: GitHubImportError.commandFailed(error.localizedDescription))
+                }
+            }
         }
-
-        let output = String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-        return try Self.parseUserJSON(output)
     }
 
     // MARK: - Strategy B: Public GitHub API (unauthenticated)
@@ -96,7 +110,13 @@ struct GitHubImporter {
             throw GitHubImportError.userNotFound(username)
         }
 
-        let url = URL(string: "https://api.github.com/users/\(trimmed)")!
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "api.github.com"
+        components.path = "/users/\(trimmed)"
+        guard let url = components.url else {
+            throw GitHubImportError.userNotFound(trimmed)
+        }
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         request.setValue("GitSwitcher/1.0", forHTTPHeaderField: "User-Agent")
