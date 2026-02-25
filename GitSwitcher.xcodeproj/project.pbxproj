@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		23D836E34439CC0B0E10C4F5 /* GitSwitcherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D943941CAE0C4033497CFF3 /* GitSwitcherApp.swift */; };
 		5E476E353B404886EA404055 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D299EC39AD9003973DF9EFAB /* ContentView.swift */; };
+		8FEF806E45C17293AC8217F4 /* GHCLIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7179F664243B712A427330 /* GHCLIService.swift */; };
 		AB91D9DA6E37B93096F35F9D /* GHAccountParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F2AC054F1B156954295688 /* GHAccountParserTests.swift */; };
 		C1207DE32DE6869A6F0BBC12 /* GHAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5B9298BFA6F36B04496B21 /* GHAccount.swift */; };
 		FD9EED614EBB3812EE2E7EAB /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		2C5AEA8859DFF794081A372A /* GitSwitcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GitSwitcher.entitlements; sourceTree = "<group>"; };
+		5D7179F664243B712A427330 /* GHCLIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHCLIService.swift; sourceTree = "<group>"; };
 		69F2AC054F1B156954295688 /* GHAccountParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHAccountParserTests.swift; sourceTree = "<group>"; };
 		6D551768CD9AA95C9C1CFE2F /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		6D943941CAE0C4033497CFF3 /* GitSwitcherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitSwitcherApp.swift; sourceTree = "<group>"; };
@@ -42,6 +44,7 @@
 			children = (
 				9B988D8D47A77012ED6AC27E /* App */,
 				69C3A406115C906630D10BAA /* Models */,
+				EAB7D11C5CE3B5F652D6BC00 /* Services */,
 				585F4621159D70AD08AF219B /* Views */,
 			);
 			path = GitSwitcher;
@@ -89,6 +92,14 @@
 				BD58ACA93514808B46466FAD /* Info.plist */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		EAB7D11C5CE3B5F652D6BC00 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5D7179F664243B712A427330 /* GHCLIService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		EDA94DBCC53D5C23DE06BA51 /* Products */ = {
@@ -183,6 +194,7 @@
 			files = (
 				5E476E353B404886EA404055 /* ContentView.swift in Sources */,
 				C1207DE32DE6869A6F0BBC12 /* GHAccount.swift in Sources */,
+				8FEF806E45C17293AC8217F4 /* GHCLIService.swift in Sources */,
 				23D836E34439CC0B0E10C4F5 /* GitSwitcherApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
