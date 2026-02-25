@@ -46,6 +46,7 @@ final class GHCLIService: ObservableObject {
         Task {
             do {
                 try await runGHVoid(["auth", "switch", "--user", account.login, "--hostname", account.host])
+                try await applyGitConfig(for: account)
                 refresh()
             } catch let e as GHError {
                 ghError = e
@@ -75,14 +76,33 @@ final class GHCLIService: ObservableObject {
 
     // MARK: - Private
 
+    private func applyGitConfig(for account: GHAccount) async throws {
+        struct UserInfo: Decodable { let id: Int; let login: String; let name: String? }
+        let json = try await runGH(["api", "user"])
+        let user = try JSONDecoder().decode(UserInfo.self, from: Data(json.utf8))
+        let displayName = user.name ?? user.login
+        let noreplyEmail = "\(user.id)+\(user.login)@users.noreply.github.com"
+        try await runCommand("/usr/bin/git", args: ["config", "--global", "user.name", displayName])
+        try await runCommand("/usr/bin/git", args: ["config", "--global", "user.email", noreplyEmail])
+    }
+
     @discardableResult
     private func runGH(_ args: [String]) async throws -> String {
+        guard let ghPath = Self.ghPath else { throw GHError.notInstalled }
+        return try await runCommand(ghPath, args: args)
+    }
+
+    private func runGHVoid(_ args: [String]) async throws {
+        _ = try await runGH(args)
+    }
+
+    @discardableResult
+    private func runCommand(_ path: String, args: [String]) async throws -> String {
         try await Task.detached(priority: .userInitiated) {
-            guard let ghPath = GHCLIService.ghPath else { throw GHError.notInstalled }
             let process = Process()
             let stdoutPipe = Pipe()
             let stderrPipe = Pipe()
-            process.executableURL = URL(fileURLWithPath: ghPath)
+            process.executableURL = URL(fileURLWithPath: path)
             process.arguments = args
             process.standardOutput = stdoutPipe
             process.standardError = stderrPipe
@@ -101,10 +121,6 @@ final class GHCLIService: ObservableObject {
             }
             return output
         }.value
-    }
-
-    private func runGHVoid(_ args: [String]) async throws {
-        _ = try await runGH(args)
     }
 }
 
